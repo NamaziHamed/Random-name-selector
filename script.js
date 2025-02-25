@@ -26,6 +26,7 @@ function handleFormSubmit() {
     <div id="${num}" class="row align-items-center">
         <span class="col-md-1">${num}.</span>
         <span class="col">${input.value}</span>
+        <button class="btn col-md-1" onclick="handleDelete(event)" id="delete"><i class="fa-solid fa-trash"></i></button>
         <hr class="my-1"/>
     </div>
     `;
@@ -37,22 +38,43 @@ function handleFormSubmit() {
 
 function handleRandom(e, i = 0) {
   e.preventDefault();
-  const outputs = document.querySelectorAll("#output .row");
-  if (i < 100) {
-    outputs.forEach((item) => {
-      item.style.background = "white";
-    });
+  if (list.length===0){
+    alert("Your list is empty!")
+  }else{
+    const outputs = document.querySelectorAll("#output .row");
+    if (i < 100) {
+      outputs.forEach((item) => {
+        item.style.background = "white";
+      });
+    }
+    if (i < 100) {
+      const res = Math.ceil(Math.random() * list.length);
+      outputs.forEach((item) => {
+        if (item.id == res) {
+          item.style.background = "red";
+        }
+      });
+      setTimeout(() => {
+        i++;
+        handleRandom(e, i);
+      }, 1*i);
+    }
   }
-  if (i < 100) {
-    const res = Math.ceil(Math.random() * list.length);
-    outputs.forEach((item) => {
-      if (item.id == res) {
-        item.style.background = "red";
-      }
-    });
-    setTimeout(() => {
-      i++;
-      handleRandom(e, i);
-    }, 1*i);
-  }
+}
+
+function handleDelete(e){
+  e.preventDefault()
+  const id = e.target.closest(".row").id - 1
+  list.splice(id,1)
+    output.innerHTML = ''
+    list.forEach((item,index)=>{
+      output.innerHTML += `
+    <div id="${index+1}" class="row align-items-center">
+        <span class="col-md-1">${index+1}.</span>
+        <span class="col">${item}</span>
+        <button class="btn col-md-1" onclick="handleDelete(event)" id="delete"><i class="fa-solid fa-trash"></i></button>
+        <hr class="my-1"/>
+    </div>
+    `;
+    })
 }
